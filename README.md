@@ -6,6 +6,8 @@ HTML ファイル 1 つで動作し、インストールやビルドは不要で
 
 **デモ:** https://mimish0778.github.io/runway/
 
+<img src="images/screenshot.png" alt="作業中（WORK）の画面" width="360">
+
 ## 特徴
 
 - 準備（IDLE）、作業（WORK）、休憩（BREAK）の 3 つのフェーズを、ボタン 1 つで切り替え
@@ -57,3 +59,7 @@ git clone https://github.com/mimish0778/runway.git
 次の記事で紹介されている考え方を参考にしています。
 
 https://note.com/awawa_adhd/n/n203716fd6e8b
+
+## ライセンス
+
+[MIT License](LICENSE)
