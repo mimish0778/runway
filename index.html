@@ -457,15 +457,23 @@ const sfx = {
 /* ── TIMER ── */
 function stopT() { if (iv) { clearInterval(iv); iv = null; } }
 
+// 経過時間は開始時刻との差から求める。setInterval の回数で数えると、バックグラウンドの
+// タブでタイマーが間引かれたときに実際より短くなるため
+const TICK_MS = 250;
+function secondsSince(t0) { return Math.floor((Date.now() - t0) / 1000); }
+
 function startT(total, onTick, onDone) {
   stopT(); elapsed = 0;
   ringSet(0, total);
+  const t0 = Date.now();
   iv = setInterval(() => {
-    elapsed++;
+    const e = Math.min(secondsSince(t0), total);
+    if (e === elapsed) return;
+    elapsed = e;
     ringSet(elapsed, total);
     onTick(elapsed);
     if (elapsed >= total) { stopT(); onDone(); }
-  }, 1000);
+  }, TICK_MS);
 }
 
 /* ── RING ── */
@@ -581,13 +589,17 @@ function startWorking() {
   ringColor('var(--work)');
   setMode('WORK MODE', 'var(--work)');
   setBtns(`<button class="pb brk" onclick="goBreak()">TAKE A BREAK</button>`);
-  let ws = 0; stopT();
+  stopT();
+  const totalBefore = st.total;
+  let ws = -1;
   iv = setInterval(() => {
-    ws++; st.total++;
+    const s = secondsSince(wStart);
+    if (s === ws) return;
+    ws = s; st.total = totalBefore + ws;
     ringSet(ws % WORK_LP, WORK_LP);
     setNum(fmt(ws));
     updateStats();
-  }, 1000);
+  }, TICK_MS);
 }
 
 // → BREAKING (from any phase, immediate countdown)
